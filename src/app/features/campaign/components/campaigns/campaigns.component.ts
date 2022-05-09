@@ -71,7 +71,7 @@ export class CampaignsComponent implements OnInit, OnDestroy {
             let success = true;
 
             if ((filter.campaign ?? '').trim() != '') {
-              success = success && campaign.campaign_name.includes(filter.campaign as string);
+              success = success && campaign.campaign_name.toLowerCase().includes(filter.campaign?.toLowerCase() as string);
             }
             if ((filter.startDate ?? '').trim() != '') {
               success = success && moment(filter.startDate).format('l') == moment.unix(campaign.campaign_start_timestamp).format('l');

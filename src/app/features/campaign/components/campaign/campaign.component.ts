@@ -75,6 +75,7 @@ export class CampaignComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.campaignForm.reset();
+    this.campaignForm.controls['type'].setValue(-1);
   }
 
   public onSaveCampaign() {

@@ -34,7 +34,8 @@
   </div>
   <div class="ui labeled input">
     <div class="ui label">End date</div>
-    <input type="date">
+    <input type="date"
+      (change)="onFilterChange([{field: 'page', value: 1},{field: 'endDate', value: endDate.value}])" #endDate>
   </div>
 </div>
 <div class="tableheader">
