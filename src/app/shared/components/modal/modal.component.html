@@ -1,0 +1,11 @@
+<div class="outerwrapper" *ngIf="visible">
+  <div class="innerwrapper">
+    <div class="header">
+      <div class="headercaption">{{ header }}</div>
+      <div class="closebutton"><i class="close icon" (click)="onClose()"></i></div>
+    </div>
+    <div class="content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

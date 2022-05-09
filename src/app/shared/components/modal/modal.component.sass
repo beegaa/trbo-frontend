@@ -1,0 +1,45 @@
+.outerwrapper
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background-color: rgba(0,0,0,.75)
+  z-index: 1
+  display: flex
+  align-items: center
+  justify-content: center
+
+  .innerwrapper
+    width: 50%
+    background-color: #fff
+    border-radius: 3px
+    min-width: 600px
+    height: 75%
+    min-height: 600px
+
+    .header
+      display: flex
+      border-bottom: 1px solid #aaa
+
+      .headercaption
+        flex: 1 1 auto
+        padding: 1rem
+        font-weight: 600
+        font-size: larger
+
+      .closebutton
+        flex: 0 0 auto
+        display: flex
+        align-items: center
+        justify-content: center
+        padding: 1rem
+        font-size: 20px
+        cursor: pointer
+
+        &:hover
+          color: #db2828
+
+    .content
+      padding: 1rem
+

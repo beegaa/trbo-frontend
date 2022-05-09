@@ -1,0 +1,36 @@
+<div *ngIf="loading" class="ui active dimmer">
+  <div class="ui loader"></div>
+</div>
+<form class="campaignform" [formGroup]="campaignForm">
+  <div class="ui labeled input">
+    <div class="ui label">Campaign</div>
+    <input type="text" placeholder="Campaign name" formControlName="name">
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">Type</div>
+    <select class="ui dropdown" [class.disabled]="loadingTypes" formControlName="type">
+      <option value="-1">Select type</option>
+      <option *ngFor="let type of (types$ | async)?.data" [value]="type.id">{{ type.value }}</option>
+    </select>
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">Start date</div>
+    <input type="date" formControlName="startDate">
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">End date</div>
+    <input type="date" formControlName="endDate">
+  </div>
+  <div class="buttonsgroup">
+    <div *ngIf="saving" class="saving">
+      Saving <div class="ui active inline loader"></div>
+    </div>
+    <button class="ui primary button" (click)="onSaveCampaign()">Save campaign</button>
+    <button class="ui gray button" (click)="onCancelCampaign()">Cancel campaign</button>
+  </div>
+</form>
+<div *ngIf="errors.length != 0" class="errors">
+  <ul>
+    <li *ngFor="let error of errors">{{ error }}</li>
+  </ul>
+</div>

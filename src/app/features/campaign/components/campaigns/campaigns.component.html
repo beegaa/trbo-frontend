@@ -1,0 +1,97 @@
+<div *ngIf="loading || changingStatus" class="ui active dimmer">
+  <div class="ui loader"></div>
+</div>
+<app-modal *ngIf="modalVisible" [header]="'Edit/create campaign'" [(visible)]="modalVisible">
+  <app-campaign [id]="editingCampaignId" (saved)="campaignSavedEvent($event)"></app-campaign>
+</app-modal>
+<div class="filtergroup">
+  <div class="ui labeled input">
+    <div class="ui label">Campaign</div>
+    <input type="text" placeholder="Campaign name"
+      (keyup)="onFilterChange([{field: 'page', value: 1},{field: 'campaign', value: campaign.value}])" #campaign>
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">Type</div>
+    <select class="ui dropdown" [class.disabled]="loadingTypes"
+      (change)="onFilterChange([{field: 'page', value: 1},{field: 'type', value: type.value}])" #type>
+      <option value="-1">Select type</option>
+      <option *ngFor="let type of (types$ | async)?.data" [value]="type.id">{{ type.value }}</option>
+    </select>
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">Status</div>
+    <select class="ui dropdown"
+      (change)="onFilterChange([{field: 'page', value: 1},{field: 'status', value: status.value}])" #status>
+      <option value="-1">Select status</option>
+      <option value="0">Deleted</option>
+      <option value="1">Active</option>
+    </select>
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">Start date</div>
+    <input type="date"
+      (change)="onFilterChange([{field: 'page', value: 1},{field: 'startDate', value: startDate.value}])" #startDate>
+  </div>
+  <div class="ui labeled input">
+    <div class="ui label">End date</div>
+    <input type="date">
+  </div>
+</div>
+<div class="tableheader">
+  <button class="ui primary button" (click)="onCreateNewCampaign()"
+    data-tooltip="Button enables creating new campaign">Create new campaign</button>
+  <div id="campaignmessage" class="campaignmessage"></div>
+</div>
+<table class="ui celled padded table sortabletable">
+  <thead>
+    <tr>
+      <th (click)="onSortChange('campaign')">Campaign <i *ngIf="filter.sortField == 'campaign'" class="caret icon"
+          [class.down]="(filter.sortOrder ?? 'ASC') == 'ASC'" [class.up]="filter.sortOrder == 'DESC'"></i></th>
+      <th (click)="onSortChange('type')">Type <i *ngIf="filter.sortField == 'type'" class="caret icon"
+          [class.down]="(filter.sortOrder ?? 'ASC') == 'ASC'" [class.up]="filter.sortOrder == 'DESC'"></i></th>
+      <th (click)="onSortChange('startDate')">Start date <i *ngIf="filter.sortField == 'startDate'" class="caret icon"
+          [class.down]="(filter.sortOrder ?? 'ASC') == 'ASC'" [class.up]="filter.sortOrder == 'DESC'"></i></th>
+      <th (click)="onSortChange('endDate')">End date <i *ngIf="filter.sortField == 'endDate'" class="caret icon"
+          [class.down]="(filter.sortOrder ?? 'ASC') == 'ASC'" [class.up]="filter.sortOrder == 'DESC'"></i></th>
+      <th (click)="onSortChange('status')">Status <i *ngIf="filter.sortField == 'status'" class="caret icon"
+          [class.down]="(filter.sortOrder ?? 'ASC') == 'ASC'" [class.up]="filter.sortOrder == 'DESC'"></i></th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let campaign of (campaigns$ | async)" [class.negative]="campaign.campaign_status_id == 0">
+      <td>{{ campaign.campaign_name }}</td>
+      <td>{{ campaign.campaign_type_text }}</td>
+      <td>{{ campaign.campaign_start_time }}</td>
+      <td>{{ campaign.campaign_end_time }}</td>
+      <td>{{ campaign.campaign_status_text }}</td>
+      <td class="collapsing single line">
+        <button *ngIf="campaign.campaign_status_id == 1" class="ui primary button"
+          data-tooltip="Button enables editing existing campaign" (click)="onEditCampaign(campaign)">Edit
+          campaign</button>
+        <button *ngIf="campaign.campaign_status_id == 1" class="ui negative button" [class.disabled]="changingStatus"
+          (click)="onStatusChange(campaign.campaign_id, 0)"
+          data-tooltip="Deleting campaign only only changes status to Deleted">Delete</button>
+        <button *ngIf="campaign.campaign_status_id == 0" class="ui positive button" [class.disabled]="changingStatus"
+          (click)="onStatusChange(campaign.campaign_id, 1)"
+          data-tooltip="Activating campaign only changes status to Active">Activate</button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="7">
+        <div class="ui right floated pagination menu pagination-custom">
+          <a class="icon item" (click)="onFilterChange([{field: 'page', value: currentPage - 1}])">
+            <i class="left chevron icon"></i>
+          </a>
+          <a *ngFor="let page of pages" class="item" [class.disabled]="page == currentPage"
+            (click)="onFilterChange([{field: 'page', value: page}])">{{ page }}</a>
+          <a class="icon item" (click)="onFilterChange([{field: 'page', value: currentPage + 1}])">
+            <i class="right chevron icon"></i>
+          </a>
+        </div>
+      </th>
+    </tr>
+  </tfoot>
+</table>
